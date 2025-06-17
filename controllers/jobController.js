@@ -11,11 +11,28 @@ async function createApplication(company, title, status = "applied") {
 
 // Returns all the jobs that matches the parameter description
 async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
-  const result = await JobApplication.find({
-    company: company,
-    title: title,
-    status: status
-  })
+  let result;
+
+  if (status === "N/A") {
+    await JobApplication.find({
+      company: company,
+      title: title,
+    }).then(jobs => {
+      console.log(jobs);
+      result = jobs;
+    })
+    return result;
+  } else {
+    await JobApplication.find({
+      company: company,
+      title: title,
+      status: status
+    }).then(jobs => {
+      console.log(jobs);
+      result = jobs;
+    })
+    return result;
+  }
 }
 
 
