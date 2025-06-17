@@ -13,6 +13,7 @@ async function createApplication(company, title, status = "applied") {
 async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
   let result;
 
+  // TODO 
   if (status === "N/A") {
     await JobApplication.find({
       company: company,
@@ -34,7 +35,6 @@ async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
     return result;
   }
 }
-
 
 module.exports = {
   createApplication,
