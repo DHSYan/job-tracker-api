@@ -15,6 +15,8 @@ mongoose.connect(process.env.MONGO_URI, {
 // // Routes
 // const userRoutes = require('./routes/userRoutes');
 // app.use('/users', userRoutes);
+const jobRouter = require('./routes/jobRoutes');
+app.use('/application', jobRouter);
 
 app.get("/", (req, res) => {
   res.send("hello world!");
