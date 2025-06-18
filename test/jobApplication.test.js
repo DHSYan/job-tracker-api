@@ -1,13 +1,17 @@
-const request = require('supertest');
-const mongoose = require('mongoose');
-const { MongoMemoryServer } = require('mongodb-memory-server');
-const app = require('../app'); // Path to your Express app
-const JobApplication = require('../models/JobApplication'); // Path to your Mongoose model
+import request from 'supertest';
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import app from '../app.js'; 
+import JobApplication from '../models/JobApplication.js'; 
 
 let mongoServer;
 
 beforeAll(async () => {
-  mongoServer = await MongoMemoryServer.create();
+  mongoServer = await MongoMemoryServer.create({
+    instance: {
+      port: 3001
+    }
+  });
   const uri = mongoServer.getUri();
   await mongoose.connect(uri);
 });
@@ -18,7 +22,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await JobApplication.deleteMany(); // Clear before each test
+  await JobApplication.deleteMany(); 
 });
 
 describe('POST /application/new', () => {
