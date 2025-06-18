@@ -1,64 +1,43 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const jobService = require("../controllers/jobController.js");
-const statusEnum = require("../enums/applicationStatus.js");
+import { getApplication, listAllApplication, createApplication } from "../controllers/jobController.js";
+import { isValidStatus }  from "../enums/applicationStatus.js";
 
 router.use(express.json());
 
-router.get("/", (req, res) => {
+router.get("/", (_, res) => {
   res.send("jobs!");
 });
 
-
-// router.post("/new/:company/:title/:status", (req, res) => {
-//   const {company, title, status} = req.params;
-//   if (statusEnum.isValidStatus(status)) {
-//     jobService.createApplication(company, title, status);
-//     res.status(200).send("Sucess");
-//   } else {
-//     res.status(403).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
-//   }
-// });
-//
 router.post("/new", (req, res) => {
   const { company, title, status } = req.body;
 
-  console.log(company);
-  console.log(title);
-  console.log(status);
-
-  if (statusEnum.isValidStatus(status)) {
-    jobService.createApplication(company, title, status);
+  if (isValidStatus(status)) {
+    createApplication(company, title, status);
     res.status(200).send("Sucess");
   } else {
     res.status(403).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
   }
 })
 
-// router.get("/get/:company/:title/:status", (req, res) => {
-//   const {company, title, status} = req.params;
-//
-//   if (!statusEnum.isValidStatus(status)) {
-//     res.status(403).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
-//   }
-//
-//   const searchResult = jobService.getApplication(company, title, status);
-//   searchResult.then(result => {
-//     res.status(200).json(result);
-//   })
-// });
-//
-// // TODO figure out how to do optional route parameters
-// router.get("/get/:company/:title", (req, res) => {
-//   const {company, title} = req.params;
-//
-//   const searchResult = jobService.getApplication(company, title);
-//   searchResult.then(result => {
-//     res.status(200).json(result);
-//   })
-// });
+router.get("/find", (req, res) => {
+  const { company, title, status } = req.query;
 
-module.exports = router;
+  console.log(company);
+  console.log(title);
+  console.log(status);
 
+  const searchResult = getApplication(company, title, status);
+  searchResult.then(result => {
+    res.status(200).json(result);
+  })
+})
 
+router.get("/list-all", (_, res) => {
+  const result = listAllApplication();
+  result.then(result => {
+    res.status(200).json(result);
+  })
+})
 
+export default router;

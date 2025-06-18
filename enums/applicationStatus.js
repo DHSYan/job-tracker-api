@@ -7,12 +7,11 @@ const ApplicationStatus = Object.freeze({
   ACCEPTED: 'accepted'
 })
 
-function isValidStatus(s) {
+export function isValidStatus(s) {
   return Object.values(ApplicationStatus).includes(s);
 }
 
-module.exports = {
-  ApplicationStatus,
-  isValidStatus
+export default {
+  ApplicationStatus
 }
 

@@ -1,6 +1,10 @@
-const express = require('express');
-const mongoose = require('mongoose');
-require('dotenv').config();
+import express from 'express';
+import mongoose from 'mongoose';
+import process from "node:process";
+import jobRouter from './routes/jobRoutes.js';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -12,13 +16,9 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
-// // Routes
-// const userRoutes = require('./routes/userRoutes');
-// app.use('/users', userRoutes);
-const jobRouter = require('./routes/jobRoutes');
 app.use('/application', jobRouter);
 
-app.get("/", (req, res) => {
+app.get("/", (_, res) => {
   res.send("hello world!");
 })
 

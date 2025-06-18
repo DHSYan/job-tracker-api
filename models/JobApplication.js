@@ -1,6 +1,6 @@
-const ApplicationStatus = require("../enums/applicationStatus");
+import ApplicationStatus from "../enums/applicationStatus.js";
 
-const mongoose = require("mongoose");
+import mongoose from "mongoose" ;
 
 const JobApplicationSchema = new mongoose.Schema({
   company: {
@@ -18,8 +18,8 @@ const JobApplicationSchema = new mongoose.Schema({
   },
   appliedDate: {
     type: Date,
-    required: false
+    required: true
   }
 });
 
-module.exports = mongoose.model("Job", JobApplicationSchema);
+export default mongoose.model("Job", JobApplicationSchema);
