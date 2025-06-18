@@ -1,43 +1,39 @@
-const JobApplication = require("../models/JobApplication.js");
+import JobApplication from "../models/JobApplication.js";
 
-async function createApplication(company, title, status = "applied") {
+export async function createApplication(company, title, status = "applied") {
   await JobApplication.create({
     company: company,
     title: title,
     status: status,
-    date: Date.now(),
+    appliedDate: Date.now(),
   })
 }
 
 // Returns all the jobs that matches the parameter description
-async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
+export async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
   let result;
 
-  // TODO 
-  if (status === "N/A") {
-    await JobApplication.find({
-      company: company,
-      title: title,
-    }).then(jobs => {
-      console.log(jobs);
-      result = jobs;
-    })
-    return result;
-  } else {
-    await JobApplication.find({
-      company: company,
-      title: title,
-      status: status
-    }).then(jobs => {
-      console.log(jobs);
-      result = jobs;
-    })
-    return result;
+  const query = {};
+  if (company !== "N/A") {
+    query.company = company;
   }
+  if (title !== "N/A") {
+    query.title = title;
+  }
+  if (status !== "N/A") {
+    query.status = status;
+  }
+
+  await JobApplication.find(query).then(jobs => {
+    result = jobs;
+  })
+  return result;
 }
 
-module.exports = {
-  createApplication,
-  getApplication
+export async function listAllApplication() {
+  let result;
+  await JobApplication.find({}).then(jobs => {
+    result = jobs;
+  })
+  return result;
 }
-
