@@ -8,10 +8,10 @@ import { isValidStatus }  from "../enums/applicationStatus.js";
 router.use(express.json());
 
 router.post("/", (req, res) => {
-  const { company, title, status } = req.body;
+  const { company, title, status, notes } = req.body;
 
   if (isValidStatus(status)) {
-    createApplication(company, title, status);
+    createApplication(company, title, status, notes);
     res.status(200).send("Sucess");
   } else {
     res.status(400).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");

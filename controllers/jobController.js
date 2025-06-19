@@ -1,14 +1,16 @@
 import JobApplication from "../models/JobApplication.js";
 import { isValidStatus } from "../enums/applicationStatus.js";
 
-export async function createApplication(company, title, status = "applied") {
+export async function createApplication(company, title, status = "applied", note = null) {
   await JobApplication.create({
     company: company,
     title: title,
     status: status,
     appliedDate: Date.now(),
+    notes: note ? [ note ] : []
   })
 }
+
 
 export async function idApplication(id) {
   let res;
