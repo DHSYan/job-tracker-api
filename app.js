@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected'))
   .catch(err => console.error(err));
 
-app.use('/application', jobRouter);
+app.use('/applications', jobRouter);
 
 app.get("/", (_, res) => {
   res.send("hello world!");
