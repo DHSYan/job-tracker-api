@@ -2,7 +2,9 @@ import express from "express";
 const router = express.Router();
 import { getApplication, listAllApplication, createApplication,
          idApplication, suggestion, idApplicationAndUpdate,
-         idApplicationNoteAppend }
+         idApplicationNoteAppend, 
+         deleteApplication,
+         deleteApplicationById}
 from "../controllers/jobController.js";
 import { isValidStatus }  from "../enums/applicationStatus.js";
 
@@ -76,5 +78,31 @@ router.put("/:id/new-note", (req, res) => {
       res.status(400).json({ error: e.message });
     })
 });
+
+router.delete("/", (req, res) => {
+  const { company, title } = req.body;
+
+  // console.log(company);
+  // console.log(title);
+
+  if (deleteApplication(company, title) === 1) {
+      res.status(200).json({ message: "success" })
+  } else {
+      res.status(400).json({ error: "Job Application does not exists" });
+  }
+})
+
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+
+  let ret;
+  deleteApplicationById(id).then(x => ret = x);
+
+  if (ret) {
+      res.status(400).json({ error: "Job Application does not exists" });
+  } else {
+    res.status(200).json({ message: "success" })
+  }
+})
 
 export default router;

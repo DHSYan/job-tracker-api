@@ -11,7 +11,6 @@ export async function createApplication(company, title, status = "applied", note
   })
 }
 
-
 export async function idApplication(id) {
   let res;
   await JobApplication.findById(id).then(x => res = x);
@@ -19,6 +18,14 @@ export async function idApplication(id) {
     throw new Error("No objects found");
   }
   return res;
+}
+
+export function deleteApplication(company, title) {
+  return JobApplication.deleteOne({ company, title });
+}
+
+export async function deleteApplicationById(id) {
+  return await JobApplication.findByIdAndDelete(id);
 }
 
 function validUpdate(update) {
