@@ -1,17 +1,12 @@
 import express from "express";
 const router = express.Router();
-import { getApplication, listAllApplication, createApplication } from "../controllers/jobController.js";
 import { getApplication, listAllApplication, createApplication,
          idApplication } from "../controllers/jobController.js";
 import { isValidStatus }  from "../enums/applicationStatus.js";
 
 router.use(express.json());
 
-router.get("/", (_, res) => {
-  res.send("jobs!");
-});
-
-router.post("/new", (req, res) => {
+router.post("/", (req, res) => {
   const { company, title, status } = req.body;
 
   if (isValidStatus(status)) {
@@ -22,7 +17,7 @@ router.post("/new", (req, res) => {
   }
 })
 
-router.get("/find", (req, res) => {
+router.get("/", (req, res) => {
   const { company, title, status } = req.query;
 
   console.log(company);
@@ -50,5 +45,13 @@ router.get("/list-all", (_, res) => {
     res.status(200).json(result);
   })
 })
+
+router.get("/:id/suggestion", (req, res) => {
+  res.status(403).json({ message: "TODO" });
+})
+
+router.put("/:id", (req, res) => {
+  res.status(403).json({ messeage: "TODO" });
+});
 
 export default router;
