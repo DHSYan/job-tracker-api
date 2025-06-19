@@ -14,7 +14,7 @@ router.post("/", (req, res) => {
     createApplication(company, title, status);
     res.status(200).send("Sucess");
   } else {
-    res.status(403).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
+    res.status(400).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
   }
 })
 
@@ -52,7 +52,16 @@ router.get("/:id/suggestion", (_, res) => {
 })
 
 router.put("/:id", (req, res) => {
-  res.status(403).json({ messeage: "TODO" });
+  const { id } = req.params;
+  const update = req.body;
+
+  idApplicationAndUpdate(id, update)
+    .then(_ => {
+      res.status(200).json({ message: "success" })
+    }).catch(e => {
+      res.status(400).json({ error: e.message });
+    })
+
 });
 
 export default router;

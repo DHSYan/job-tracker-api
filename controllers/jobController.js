@@ -1,4 +1,5 @@
 import JobApplication from "../models/JobApplication.js";
+import { isValidStatus } from "../enums/applicationStatus.js";
 
 export async function createApplication(company, title, status = "applied") {
   await JobApplication.create({
@@ -15,6 +16,41 @@ export async function idApplication(id) {
   if (res === null) {
     throw new Error("No objects found");
   }
+  return res;
+}
+
+function validUpdate(update) {
+  const keys = Object.keys(update);
+
+  let result = true;
+
+  keys.forEach(key => {
+    if (
+      key !== "status" || 
+      key !== "company" || 
+      key !== "appliedDate" || 
+      key !== "title") {
+      return false;
+    }
+  });
+
+  if (keys.includes("status")) {
+    result = isValidStatus(update["status"]);
+  }
+
+  return result;
+}
+
+export async function idApplicationAndUpdate(id, update) {
+  if (!validUpdate(update)) {
+    throw new Error("invalid update body or status type");
+  }
+
+  const res = await JobApplication.findByIdAndUpdate(
+    id, 
+    update, 
+    { new : true }
+  );
   return res;
 }
 
