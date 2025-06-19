@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 import { getApplication, listAllApplication, createApplication } from "../controllers/jobController.js";
+import { getApplication, listAllApplication, createApplication,
+         idApplication } from "../controllers/jobController.js";
 import { isValidStatus }  from "../enums/applicationStatus.js";
 
 router.use(express.json());
@@ -30,6 +32,15 @@ router.get("/find", (req, res) => {
   const searchResult = getApplication(company, title, status);
   searchResult.then(result => {
     res.status(200).json(result);
+  })
+})
+
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  idApplication(id).then(result => {
+    res.status(200).json(result);
+  }).catch(_ => {
+    res.status(404).json({ error: "no such application was found"});
   })
 })
 
