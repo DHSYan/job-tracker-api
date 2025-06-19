@@ -1,6 +1,5 @@
 import JobApplication from "../models/JobApplication.js";
 import { isValidStatus } from "../enums/applicationStatus.js";
-import { assert } from "node:console";
 
 export async function createApplication(company, title, status = "applied", notes = []) {
   await JobApplication.create({
@@ -59,11 +58,6 @@ export async function idApplicationAndUpdate(id, update) {
 }
 
 export async function idApplicationNoteAppend(id, note) {
-
-  if (!validUpdate(note)) {
-    throw new Error("invalid update body");
-  }
-
   // get the current notes
   // let res;
   // await JobApplication.findById(id).then(x => res = x.toObject());
