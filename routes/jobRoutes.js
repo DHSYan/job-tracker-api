@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
 import { getApplication, listAllApplication, createApplication,
-         idApplication } from "../controllers/jobController.js";
+         idApplication, suggestion, idApplicationAndUpdate }
+from "../controllers/jobController.js";
 import { isValidStatus }  from "../enums/applicationStatus.js";
 
 router.use(express.json());
@@ -46,8 +47,8 @@ router.get("/list-all", (_, res) => {
   })
 })
 
-router.get("/:id/suggestion", (req, res) => {
-  res.status(403).json({ message: "TODO" });
+router.get("/:id/suggestion", (_, res) => {
+  res.status(200).json({ message: suggestion() });
 })
 
 router.put("/:id", (req, res) => {

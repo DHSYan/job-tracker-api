@@ -46,3 +46,9 @@ export async function listAllApplication() {
   })
   return result;
 }
+
+export function suggestion() {
+  // this in the future could be an actual API call to open AI's 
+  // API but for now it will only return a mock suggetion
+  return "this is a mocked AI response, in the future this can be replaced by an actual call to an AI API"
+}
