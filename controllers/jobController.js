@@ -9,6 +9,15 @@ export async function createApplication(company, title, status = "applied") {
   })
 }
 
+export async function idApplication(id) {
+  let res;
+  await JobApplication.findById(id).then(x => res = x);
+  if (res === null) {
+    throw new Error("No objects found");
+  }
+  return res;
+}
+
 // Returns all the jobs that matches the parameter description
 export async function getApplication(company = "N/A", title = "N/A" , status = "N/A") {
   let result;
