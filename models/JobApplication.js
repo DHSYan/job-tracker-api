@@ -19,6 +19,10 @@ const JobApplicationSchema = new mongoose.Schema({
   appliedDate: {
     type: Date,
     required: true
+  },
+  notes: {
+    type: Array,
+    required: false
   }
 });
 
