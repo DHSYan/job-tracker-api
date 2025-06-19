@@ -23,11 +23,11 @@ if they fail try running them as `sudo`
 - create more tests
 - ~~Use request body instead of route parameter~~
 - ~~Query parameter for retrieval~~
-- PUT endpoint for updating an application
+- ~~PUT endpoint for updating an application~~
 - Delete endpoint for deleting an application
 - create a notes field in the data schema
 - POST endpoint for notes
-- GET /applications/:id/suggestion returns a mock response
+- ~~GET /applications/:id/suggestion returns a mock response~~
 
 
 
