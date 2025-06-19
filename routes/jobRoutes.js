@@ -1,7 +1,8 @@
 import express from "express";
 const router = express.Router();
 import { getApplication, listAllApplication, createApplication,
-         idApplication, suggestion, idApplicationAndUpdate }
+         idApplication, suggestion, idApplicationAndUpdate,
+         idApplicationNoteAppend }
 from "../controllers/jobController.js";
 import { isValidStatus }  from "../enums/applicationStatus.js";
 
@@ -62,6 +63,18 @@ router.put("/:id", (req, res) => {
       res.status(400).json({ error: e.message });
     })
 
+});
+
+router.put("/:id/new-note", (req, res) => {
+  const { id } = req.params;
+  const { note }  = req.body;
+
+  idApplicationNoteAppend(id, note)
+    .then(_ => {
+      res.status(200).json({ message: "success" })
+    }).catch(e => {
+      res.status(400).json({ error: e.message });
+    })
 });
 
 export default router;

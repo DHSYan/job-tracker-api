@@ -1,13 +1,14 @@
 import JobApplication from "../models/JobApplication.js";
 import { isValidStatus } from "../enums/applicationStatus.js";
+import { assert } from "node:console";
 
-export async function createApplication(company, title, status = "applied", note = null) {
+export async function createApplication(company, title, status = "applied", notes = []) {
   await JobApplication.create({
     company: company,
     title: title,
     status: status,
     appliedDate: Date.now(),
-    notes: note ? [ note ] : []
+    notes: notes 
   })
 }
 
@@ -31,7 +32,8 @@ function validUpdate(update) {
       key !== "status" || 
       key !== "company" || 
       key !== "appliedDate" || 
-      key !== "title") {
+      key !== "title" ||
+      key !== "notes" ) {
       return false;
     }
   });
@@ -54,6 +56,30 @@ export async function idApplicationAndUpdate(id, update) {
     { new : true }
   );
   return res;
+}
+
+export async function idApplicationNoteAppend(id, note) {
+
+  if (!validUpdate(note)) {
+    throw new Error("invalid update body");
+  }
+
+  // get the current notes
+  // let res;
+  // await JobApplication.findById(id).then(x => res = x.toObject());
+  // console.log("the note is " + note);
+  let res = await JobApplication.findById(id);
+  // console.log(res)
+  const notes = res["notes"];
+  // console.log(notes)
+  notes.push(note)
+  // console.log("!!!!!!!! updated " + notes)
+
+  res = await JobApplication.findByIdAndUpdate(
+    id,
+    { notes: notes },
+    { new: true }
+  )
 }
 
 // Returns all the jobs that matches the parameter description
