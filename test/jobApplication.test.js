@@ -67,19 +67,64 @@ describe('POST /applications', () => {
   });
 });
 
-// describe('GET /api/jobapplications', () => {
-//   it('should retrieve all job applications', async () => {
+describe('GET /applications', () => {
+  test('should retrieve all job applications', async () => {
+    await JobApplication.create([
+      { company: 'OpenAI', title: 'AI Engineer', status: 'applied', appliedDate: Date.now() },
+      { company: 'DeepMind', title: 'ML Engineer', status: 'interview', appliedDate: Date.now() }
+    ]);
+
+    let res = await request(app).get('/applications').send({
+      company: 'OpenAI',
+      title: 'AI Engineer',
+    });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+
+    res = await request(app).get('/applications');
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+
+  });
+});
+
+describe("GET /applications/:id", () => {
+
+});
+
+// describe("GET /applications/listall", () => {
+//   test('should retrieve all job applications', async () => {
 //     await JobApplication.create([
-//       { company: 'OpenAI', title: 'AI Engineer', status: 'applied' },
-//       { company: 'DeepMind', title: 'ML Engineer', status: 'interview' }
+//       { company: 'OpenAI', title: 'AI Engineer', status: 'applied', appliedDate: Date.now() },
+//       { company: 'DeepMind', title: 'ML Engineer', status: 'interview', appliedDate: Date.now() }
 //     ]);
 //
-//     const res = await request(app).get('/applications/get').send({
-//       company: 'OpenAI',
-//       title: 'AI Engineer',
-//     });
-//
+//     const res = await request(app).get('/applications/listall');
 //     expect(res.statusCode).toBe(200);
 //     expect(res.body.length).toBe(2);
-//   });
+//   })
 // });
+
+describe("PUT /application/:id", () => {
+})
+
+describe("PUT /application/:id/new-note ", () => {
+})
+
+describe("DELETE /application/:id", () => {
+  test ("database should see no additional objects", async () => {
+    const job = await JobApplication.create(
+      { company: 'OpenAI', title: 'AI Engineer', status: 'applied', appliedDate: Date.now() },
+    )
+
+    const listallRes = await request(app).get('/applications');
+    expect(listallRes.body.length).toBe(1);
+
+    await request(app).delete('/applications/' + job._id);
+
+    const res = await request(app).get('/applications');
+    expect(res.body.length).toBe(0);
+  })
+})
+
