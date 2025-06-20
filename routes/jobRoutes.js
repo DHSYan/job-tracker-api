@@ -74,17 +74,23 @@ router.put("/:id/new-note", (req, res) => {
     })
 });
 
-router.delete("/", (req, res) => {
+router.delete("/", async (req, res) => {
   const { company, title } = req.body;
 
   // console.log(company);
   // console.log(title);
 
-  if (deleteApplication(company, title) === 1) {
-      res.status(200).json({ message: "success" })
-  } else {
-      res.status(400).json({ error: "Job Application does not exists" });
+ try {
+    const result = await deleteApplication(company, title);
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: "success" });
+    } else {
+      throw new Error();
+    }
+  } catch (_) {
+    res.status(400).json({ error: "Job Application does not exist" });
   }
+
 });
 
 router.delete("/:id", (req, res) => {

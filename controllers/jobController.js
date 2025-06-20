@@ -73,6 +73,10 @@ export async function idApplicationAndUpdate(id, update) {
 }
 
 export async function idApplicationNoteAppend(id, note) {
+
+  if (note === undefined) {
+    throw new Error("note can't be empty");
+  }
   // get the current notes
   // let res;
   // await JobApplication.findById(id).then(x => res = x.toObject());
