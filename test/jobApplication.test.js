@@ -179,8 +179,63 @@ describe('PUT /applications/:id', () => {
   });
 });
 
-describe("PUT /application/:id/new-note ", () => {
-})
+describe('PUT /application/:id/new-note', () => {
+
+  test('successfully appends a note to an existing application', async () => {
+    const job = await JobApplication.create({
+      company: 'OpenAI',
+      title: 'Engineer',
+      status: 'applied',
+      appliedDate: Date.now(),
+      notes: []
+    });
+
+    const res = await request(app)
+      .put(`/applications/${job._id}/new-note`)
+      .send({ note: 'Strong candidate' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe('success');
+
+    const updated = await JobApplication.findById(job._id);
+    expect(updated.notes).toContain('Strong candidate');
+  });
+
+  test('returns 400 for invalid ObjectId format', async () => {
+    const res = await request(app)
+      .put('/applications/not-a-real-id/new-note')
+      .send({ note: 'This will fail' });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toBeDefined();
+  });
+
+  test('returns 400 if note is missing in body', async () => {
+    const job = await JobApplication.create({
+      company: 'Google',
+      title: 'PM',
+      status: 'applied',
+      appliedDate: Date.now()
+    });
+
+    const res = await request(app)
+      .put(`/applications/${job._id}/new-note`)
+      .send({});
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toMatch(/note/i);
+  });
+
+  test('returns 400 if ID is valid format but no document exists', async () => {
+    const fakeId = new mongoose.Types.ObjectId();
+    const res = await request(app)
+      .put(`/applications/${fakeId}/new-note`)
+      .send({ note: 'Ghost update' });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toMatch(/Cannot read/i); // or your custom error
+  });
+});
 
 describe("DELETE /application/:id", () => {
   test ("database should see no additional objects", async () => {
@@ -217,4 +272,43 @@ describe("DELETE /application/:id", () => {
     expect(res.body.length).toBe(1);
   })
 })
+
+describe('DELETE /application/', () => {
+  test('successfully deletes a job by company and title', async () => {
+    await JobApplication.create({
+      company: 'Meta',
+      title: 'Engineer',
+      status: 'applied',
+      appliedDate: Date.now()
+    });
+
+    const res = await request(app)
+      .delete('/applications')
+      .send({ company: 'Meta', title: 'Engineer' });
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("success");
+
+    const check = await JobApplication.find({ company: 'Meta', title: 'Engineer' });
+    expect(check.length).toBe(0);
+  });
+
+  test('returns 400 if no matching document exists', async () => {
+    const res = await request(app)
+      .delete('/applications')
+      .send({ company: 'GhostCorp', title: 'Janitor' });
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toMatch(/does not exist/i);
+  });
+
+  test('returns 400 if request body is missing fields', async () => {
+    const res = await request(app)
+      .delete('/applications')
+      .send({ company: 'OnlyCompany' }); 
+
+    expect(res.statusCode).toBe(400);
+    expect(res.body.error).toMatch(/does not exist/i);
+  });
+});
 
