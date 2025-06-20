@@ -1,5 +1,6 @@
 import JobApplication from "../models/JobApplication.js";
 import { isValidStatus } from "../enums/applicationStatus.js";
+import mongoose from "mongoose";
 
 export async function createApplication(company, title, status = "applied", notes = []) {
   await JobApplication.create({
@@ -25,7 +26,14 @@ export function deleteApplication(company, title) {
 }
 
 export async function deleteApplicationById(id) {
-  return await JobApplication.findByIdAndDelete(id);
+  let ret;
+  try {
+    ret = await JobApplication.findByIdAndDelete(id);
+  } catch (_) {
+    return { error: "invalid ID" }; 
+  }
+
+  return ret;
 }
 
 export function validUpdate(update) {
@@ -49,6 +57,9 @@ export function validUpdate(update) {
 }
 
 export async function idApplicationAndUpdate(id, update) {
+  if (!mongoose.Types.ObjectId.isValid(id) || !await JobApplication.exists({ _id: id })) {
+    throw new Error("invalid ID");
+  }
   if (!validUpdate(update)) {
     throw new Error("invalid update body or status type");
   }
