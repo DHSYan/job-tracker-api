@@ -13,11 +13,13 @@ router.use(express.json());
 router.post("/", (req, res) => {
   const { company, title, status, notes } = req.body;
 
-  if (isValidStatus(status)) {
+  if (company === undefined || title == undefined) {
+    res.status(400).json({ error: "Company and Title are required fields" });
+  } else if (isValidStatus(status)) {
     createApplication(company, title, status, notes);
-    res.status(200).send("Sucess");
+    res.status(200).json({ message: "Sucess" });
   } else {
-    res.status(400).send("Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted");
+    res.status(400).json({ error: "Status not accepted, needs to be either saved, applied, interview, offered, rejected, accepted" });
   }
 })
 
