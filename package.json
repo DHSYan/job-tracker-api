@@ -1,11 +1,11 @@
 {
   "name": "job-tracker-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "npx jest",
-    "start": "node app.js",
-    "dev": "./node_modules/nodemon/bin/nodemon.js app.js"
+    "test": "npx jest --detectOpenHandles",
+    "start": "node server.js",
+    "dev": "./node_modules/nodemon/bin/nodemon.js server.js"
   },
   "repository": {
     "type": "git",
