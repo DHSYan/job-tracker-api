@@ -122,13 +122,13 @@ By Company
 - [x] POST endpoint for notes 
 - [x] ability to append notes
 - [x] GET /applications/:id/suggestion returns a mock response
-- [ ] Provide function to search the database for all notes, and return 
-relevant jobapps
 
 # Future Improvements 
 - Use assert for more robust software
 - Reduce duplication in some of the routes 
   - for example, new-notes and the general object update could be abstracted
+- [ ] Provide function to search the database for all notes, and return 
+relevant jobapps
 
 # Problem with NIXOS
 - upon testing with JEST, mongodb-memory-server does not support nixos out of the box
