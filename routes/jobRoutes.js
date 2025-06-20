@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { getApplication, listAllApplication, createApplication,
+import { getApplication, createApplication,
          idApplication, suggestion, idApplicationAndUpdate,
          idApplicationNoteAppend, 
          deleteApplication,
@@ -26,35 +26,28 @@ router.post("/", (req, res) => {
 router.get("/", (req, res) => {
   const { company, title, status } = req.query;
 
-  console.log(company);
-  console.log(title);
-  console.log(status);
+  // console.log(company);
+  // console.log(title);
+  // console.log(status);
 
   const searchResult = getApplication(company, title, status);
   searchResult.then(result => {
     res.status(200).json(result);
-  })
-})
+  });
+});
 
 router.get("/:id", (req, res) => {
   const { id } = req.params;
   idApplication(id).then(result => {
     res.status(200).json(result);
   }).catch(_ => {
-    res.status(404).json({ error: "no such application was found"});
-  })
-})
-
-router.get("/list-all", (_, res) => {
-  const result = listAllApplication();
-  result.then(result => {
-    res.status(200).json(result);
-  })
-})
+    res.status(400).json({ error: `no such application with '${id}' was found` });
+  });
+});
 
 router.get("/:id/suggestion", (_, res) => {
   res.status(200).json({ message: suggestion() });
-})
+});
 
 router.put("/:id", (req, res) => {
   const { id } = req.params;
@@ -92,19 +85,14 @@ router.delete("/", (req, res) => {
   } else {
       res.status(400).json({ error: "Job Application does not exists" });
   }
-})
+});
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
 
-  let ret;
-  deleteApplicationById(id).then(x => ret = x);
+  deleteApplicationById(id);
 
-  if (ret) {
-      res.status(400).json({ error: "Job Application does not exists" });
-  } else {
-    res.status(200).json({ message: "success" })
-  }
-})
+  res.status(200).json({ message: "success" })
+});
 
 export default router;
