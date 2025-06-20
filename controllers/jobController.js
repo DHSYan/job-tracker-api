@@ -28,25 +28,22 @@ export async function deleteApplicationById(id) {
   return await JobApplication.findByIdAndDelete(id);
 }
 
-function validUpdate(update) {
+export function validUpdate(update) {
+  const validFields = [ "status", "company", "appliedDate", "title", "notes" ];
   const keys = Object.keys(update);
 
   let result = true;
 
-  keys.forEach(key => {
-    if (
-      key !== "status" || 
-      key !== "company" || 
-      key !== "appliedDate" || 
-      key !== "title" ||
-      key !== "notes" ) {
-      return false;
-    }
-  });
-
   if (keys.includes("status")) {
     result = isValidStatus(update["status"]);
   }
+
+  keys.forEach(key => {
+    if (!validFields.includes(key)) {
+      result = false;
+    }
+  });
+
 
   return result;
 }
