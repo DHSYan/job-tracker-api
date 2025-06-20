@@ -104,6 +104,11 @@ describe('Job Application Controller', () => {
     const check = await JobApplication.findById(job._id);
     expect(check).toBeNull();
   });
+  
+  test("deletes something that doesn't exists", async () => {
+    const res = await deleteApplicationById(123); 
+    expect(res["error"]).toBe("invalid ID");
+  })
 
   test('updates a job application with valid fields', async () => {
     const job = await JobApplication.create({ company: "UpdateCo", title: "Title", status: "applied", appliedDate: Date.now() });
